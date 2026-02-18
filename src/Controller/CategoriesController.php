@@ -6,6 +6,8 @@ use PHPStan\PhpDocParser\Ast\Type\NullableTypeNode;
 
 class CategoriesController extends AppController{
 
+
+//page de la liste avec toutes les categories
     public function index(){
         //find() récupère plusieurs ligne dans categories
         $list = $this->Categories->find();
@@ -15,7 +17,7 @@ class CategoriesController extends AppController{
 
         $this->set(compact(['list']));
     }
-
+//page les infos d'une categorie indentifié avec son id 
     public function detail($id = null){
         //innitialise une variable $categoty et lui ajoute le contenu de l'objet de type (Entité Categories)et qui a l'id $id 
         //get() recupère une seul ligne
@@ -24,7 +26,7 @@ class CategoriesController extends AppController{
         $this->set(compact('category'));
         //this->set(['category'=> $category]);
     }
-
+//page de creation d'une nouvelle categorie
     public function new(){
         //on cree une entité de categorie vide 
         $new = $this->Categories->newEmptyEntity();
@@ -58,7 +60,7 @@ class CategoriesController extends AppController{
         //on transmet l'entité a la vue
         $this->set(compact('new'));
     }
-
+//page pour modifier une categorie deja existante
     public function edit($id = null){
         //on recupère l'infos de l'objet souhaité
         $category = $this->Categories->get($id);
@@ -84,7 +86,7 @@ class CategoriesController extends AppController{
             $this->Flash->error('Modification impossible');
         endif;
 
-    endif;
+        endif;
 
         //fin tu test form
 
@@ -92,4 +94,30 @@ class CategoriesController extends AppController{
         $this->set(compact('category'));
 
     }
+//action qui suppprime la base et qui nous redirige (pas de page Html)
+    public function delete($id = null){
+
+        //on autorise seulement les methode POST et delet (tout le reste déclenchera une erreur)
+        $this ->request->allowMethod(['post','delete']);
+
+        //on charge l'entité souhaité
+        $category = $this->Categories->get($id);
+        
+        //si la supression fonctionne 
+        if($this->Categories->delete($category))
+            //mess sucess
+            $this->Flash->success('Catégorie supprimé');
+            
+
+        //sinon 
+        else 
+            //mess error
+        $this->Flash->error('Supression impossible');
+
+        //redirection
+        return $this->redirect(['action' => 'index']);
+
+    }
+
+
 }
